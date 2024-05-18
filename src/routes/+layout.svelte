@@ -1,18 +1,34 @@
-<script>
-	import './styles.css';
+<script lang="ts">
+	import "../app.css"
+
+	import type { PageData } from "./$types";
+
+    import Footer from "$lib/components/Footer.svelte";
+    import Header from "$lib/components/Header.svelte";
+    import { UserStore } from "$lib/stores/UserStore";
+    import Navbar from "$lib/components/Navbar.svelte";
+
+	export let data: PageData;
+
+	$: UserStore.set(data.user);
 </script>
 
+<svelte:head>
+	<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</svelte:head>
+
 <div class="app">
-	<header>
-	</header>
+	<Header />
+
+	{#if $UserStore}
+		<Navbar />
+	{/if}
 
 	<main>
 		<slot />
 	</main>
 
-	<footer>
-		<p>visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit</p>
-	</footer>
+	<Footer />
 </div>
 
 <style>
@@ -31,23 +47,7 @@
 		max-width: 64rem;
 		margin: 0 auto;
 		box-sizing: border-box;
-	}
-
-	footer {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
 		align-items: center;
-		padding: 12px;
-	}
-
-	footer a {
-		font-weight: bold;
-	}
-
-	@media (min-width: 480px) {
-		footer {
-			padding: 12px 0;
-		}
+		justify-content: center;
 	}
 </style>
