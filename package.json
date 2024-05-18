@@ -27,6 +27,7 @@
 	"type": "module",
 	"dependencies": {
 		"chart.js": "^4.4.3",
+		"pocketbase": "^0.21.2",
 		"svelte-chartjs": "^3.1.5"
 	}
 }
