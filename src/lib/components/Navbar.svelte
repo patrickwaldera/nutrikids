@@ -7,34 +7,36 @@
             </a>
         </li>
         <li>
-            <a href="/">
+            <a href="/records">
                 <i class='bx bx-clipboard' ></i>
                 Registros
             </a>
         </li>
         <li>
-            <a href="/">
+            <a href="/classes">
                 <i class='bx bx-merge'></i>
                 Turmas 
             </a>
         </li>
         <li>
-            <a href="/">
+            <a href="/students">
                 <i class='bx bxs-graduation'></i>
                 Alunos 
             </a>
         </li>
         <li>
-            <a href="/">
+            <a href="/profile">
                 <i class='bx bxs-user-circle'></i>
                 Perfil 
             </a>
         </li>
         <li>
-            <a href="/">
-                <i class='bx bx-log-out'></i>
-                Sair
-            </a>
+            <form action="/logout" method="POST">
+                <button type="submit">
+                    <i class='bx bx-log-out'></i>
+                    Sair
+                </button>
+            </form>
         </li>
     </ul>
 </nav>
