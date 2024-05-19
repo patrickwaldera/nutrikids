@@ -1,10 +1,11 @@
 import { PBAuthRepository } from "$lib/infra/repositories_impl/PBAuthRepository";
-import type { IAuthRepository } from "../repositories/AuthRepository";
+import type { LoginResponse } from "$lib/core/dtos/LoginResponse";
+import type { IAuthRepository } from "$lib/core/repositories/AuthRepository";
 
 export class AuthService {
 	private static authRepository: IAuthRepository = new PBAuthRepository();
 
-	public static async login(username: string, password: string): Promise<any> {
+	public static async login(username: string, password: string): Promise<LoginResponse> {
 		try {
 			return await AuthService.authRepository.login(username, password);
 		} catch (error) {
