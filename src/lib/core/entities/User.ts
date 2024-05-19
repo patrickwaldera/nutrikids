@@ -3,5 +3,6 @@ export type User = {
 	name: string;
 	username: string;
 	email: string;
-	role: string;
+	role: "nutritionist" | "teacher";
+	school_id?: string;
 };
