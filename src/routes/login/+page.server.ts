@@ -15,16 +15,11 @@ export const actions: Actions = {
 
 		try {
 			const response = await AuthService.login(username, password);
+			
+			locals.user = response.user;
+			cookies.set("user", JSON.stringify(response.user), { path: "/", sameSite: "strict", maxAge: 60 * 60 * 24 * 7 });
 			locals.token = response.token;
 			cookies.set("token", response.token, { path: "/", sameSite: "strict", maxAge: 60 * 60 * 24 * 7 });
-			const user = {
-				id: response.record.id,
-				name: response.record.name,
-				username: response.record.username,
-				email: response.record.email,
-				role: response.record.role
-			};
-			cookies.set("user", JSON.stringify(user), { path: "/", sameSite: "strict", maxAge: 60 * 60 * 24 * 7 });
 			
 		} catch (error: any) {
 			if (error.response.status === 400 || error.response.status === 401) {
