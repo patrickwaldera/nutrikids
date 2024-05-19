@@ -4,7 +4,7 @@ import type { PageServerLoad } from "./$types"
 export const prerender = true;
 
 export const load: PageServerLoad = async ({ locals }: any) => {
-	if(!locals.user) {
+	if(!locals.token) {
 	  throw redirect(303, "/login")
 	}
   }
