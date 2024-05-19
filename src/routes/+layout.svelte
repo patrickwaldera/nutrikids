@@ -1,16 +1,11 @@
 <script lang="ts">
 	import "../app.css"
 
-	import type { PageData } from "./$types";
-
     import Footer from "$lib/components/Footer.svelte";
     import Header from "$lib/components/Header.svelte";
-    import { UserStore } from "$lib/stores/UserStore";
     import Navbar from "$lib/components/Navbar.svelte";
 
-	export let data: PageData;
-
-	$: UserStore.set(data.user);
+	export let data;
 </script>
 
 <svelte:head>
@@ -19,8 +14,7 @@
 
 <div class="app">
 	<Header />
-
-	{#if $UserStore}
+	{#if data.user !== null}
 		<Navbar />
 	{/if}
 
