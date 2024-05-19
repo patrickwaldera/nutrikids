@@ -1,4 +1,3 @@
 export interface IAuthRepository {
-	login(username: string, password: string): Promise<void>;
-	logout(): void;
+	login(username: string, password: string): Promise<any>;
 }
