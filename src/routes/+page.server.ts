@@ -9,11 +9,16 @@ export const load: PageServerLoad = async (event) => {
 	  throw redirect(303, "/login")
 	}
 
-	const schoolId = event.locals.user?.school_id;
-	if (schoolId) {
-		const school = await SchoolService.getOneById(event.locals.token, schoolId);
-		return { school };
+	try {
+		const schoolId = event.locals.user?.schoolId;
+		if (schoolId) {
+			const school = await SchoolService.getOneById(event.locals.token, schoolId);
+			const classes = await SchoolService.getClassesBySchoolId(event.locals.token, schoolId);
+			return { school, classes };
+		}
+	} catch (error) {
+		return { error: "Ocorreu um erro ao buscar as informações da escola." };
 	}
 
-	return { error: "School not found" };
+	return { error: "Informações da escola não encontradas." };
   }
