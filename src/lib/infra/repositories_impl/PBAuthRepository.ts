@@ -18,7 +18,7 @@ export class PBAuthRepository implements IAuthRepository {
 				username: data.record.username,
 				email: data.record.email,
 				role: data.record.role,
-				school_id: data.record.school_id,
+				schoolId: data.record.school_id,
 			};
 
 			const token = response.data.token;
