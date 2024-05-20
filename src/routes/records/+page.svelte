@@ -1,6 +1,8 @@
 <script lang="ts">
+    import EditModal from "$lib/components/EditModal.svelte";
     import ErrorComponent from "$lib/components/ErrorComponent.svelte";
     import SkeletonTable from "$lib/components/SkeletonTable.svelte";
+    import type { Record } from "$lib/core/entities/Record.js";
     import { RecordsService } from "$lib/core/services/RecordsService.js";
     import { startLoading, stopLoading } from "$lib/core/utils/LoadingUtil.js";
     import { isLoading } from "$lib/stores/LoadingStore.js";
@@ -9,8 +11,10 @@
 	export let data;
 
 	$: selectedMonth = data.selectedMonth;
-
 	$: records = data.records;
+
+	let showEditModal = false;
+	let selectedRecord: Record | null = null;
 
 	async function fetchRecordsByMonth() {
 		if (selectedMonth) {
@@ -24,6 +28,17 @@
 			}
 		}
 	}
+
+	function openEditModal(record: Record) {
+		showEditModal = true;
+		selectedRecord = record;
+	}
+
+	function closeEditModal() {
+		showEditModal = false;
+		selectedRecord = null;
+	}
+
 </script>
 
 <section transition:fade={{ duration: 300 }} class="w-full">
@@ -47,15 +62,20 @@
 				<SkeletonTable />
 			</div>
 		{:else}
-			{#if records}
+			{#if records?.length === 0}
+				<div class="mt-6">
+					<p>Nenhum registro encontrado.</p>
+				</div>
+			{/if}
+			{#if records && records.length > 0}
 				<div class="overflow-x-auto mt-6">
 					<table class="table table-xs">
 					<thead>
 						<tr>
 							<th>Nome</th> 
 							<th>Idade na medição</th> 
-							<th>Altura (cm)</th> 
 							<th>Peso (kg)</th> 
+							<th>Altura (cm)</th> 
 							<th>IMC</th> 
 							<th>Notas</th>
 						</tr>
@@ -65,12 +85,12 @@
 							<tr>
 								<td class="text-nowrap">{record.studentName}</td>
 								<td>{record.ageAtMeasurement}</td>
-								<td>{record.height}</td>
 								<td>{record.weight}</td>
+								<td>{record.height}</td>
 								<td>{record.bmi}</td>
 								<td>{record.notes}</td>
 								<td class="flex gap-2">
-									<button class="btn btn-xs btn-neutral">Editar</button>
+									<button class="btn btn-xs btn-neutral" on:click={() => openEditModal(record)}>Editar</button>
 									<button class="btn btn-xs btn-error">
 										<i class='bx bxs-trash'></i>
 									</button>
@@ -82,6 +102,10 @@
 				</div>
 			{/if}
 		{/if}
+	{/if}
+
+	{#if showEditModal}
+		<EditModal record={selectedRecord} on:close={closeEditModal} />
 	{/if}
 </section>
   
