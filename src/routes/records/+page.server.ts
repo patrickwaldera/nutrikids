@@ -1,7 +1,8 @@
 import { redirect } from "@sveltejs/kit"
 import type { PageServerLoad } from "../$types";
 import { getMonthName } from "$lib/core/utils/Date";
-import { RecordsService } from "$lib/core/services/RecordsService";
+import { RecordService } from "$lib/core/services/RecordService";
+import { SchoolService } from "$lib/core/services/SchoolService";
 
 export const prerender = true;
 
@@ -20,12 +21,16 @@ export const load: PageServerLoad = async (event) => {
 
 	try {
 
-		const records = await RecordsService.getRecordsBySchoolIdAndMonth(event.locals.token, event.locals.user?.schoolId!, currentMonth);
+		const records = await RecordService.getRecordsBySchoolIdAndMonth(event.locals.token, event.locals.user?.schoolId!, currentMonth);
+		const sortedRecords = records.sort((a, b) => b.bmi - a.bmi);
+		const classes = await SchoolService.getClassesBySchoolId(event.locals.token, event.locals.user?.schoolId!);
+		const sortedClasses = classes.sort((a, b) => a.name.localeCompare(b.name));
 		return {
 			currentYear,
 			months,
-			selectedMonth: currentMonth,
-			records,
+			currentMonth,
+			records: sortedRecords,
+			classes: sortedClasses,
 			token: event.locals.token
 		}
 	} catch (error) {
