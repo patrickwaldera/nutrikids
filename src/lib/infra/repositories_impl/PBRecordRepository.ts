@@ -24,6 +24,7 @@ export class PBRecordsRepository implements IRecordRepository {
 					studentName: item.expand.student_id.name,
 					classId: item.expand.student_id.class_id,
 					className: item.expand.student_id.expand.class_id.name,
+					classAlias: item.expand.student_id.expand.class_id.alias,
 					date: convertDateToDDMMYYYY(new Date(item.date).toISOString().split('T')[0]),
 					ageAtMeasurement: item.age_at_measurement,
 					weight: item.weight,
