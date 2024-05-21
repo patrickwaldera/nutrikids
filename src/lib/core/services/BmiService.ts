@@ -7,14 +7,14 @@ export class BmiService {
 		}
 	}
 
-	public static getBmiStatus(imc: number): string {
-        if (imc <= 16.9) return "Muito abaixo do peso";
-		if (imc >= 17 && imc <= 18.4) return "Abaixo do peso";
-		if (imc >= 18.5 && imc <= 24.9) return "Peso normal";
-		if (imc >= 25 && imc <= 29.9) return "Sobrepeso";
-		if (imc >= 30 && imc <= 34.9) return "Obesidade grau I";
-		if (imc >= 35 && imc <= 39.9) return "Obesidade grau II";
-		if (imc >= 40) return "Obesidade grau III";
+	public static getBmiStatus(bmi: number): string {
+        if (bmi <= 16.9) return "Muito abaixo do peso";
+		if (bmi >= 17 && bmi <= 18.4) return "Abaixo do peso";
+		if (bmi >= 18.5 && bmi <= 24.9) return "Peso normal";
+		if (bmi >= 25 && bmi <= 29.9) return "Sobrepeso";
+		if (bmi >= 30 && bmi <= 34.9) return "Obesidade grau I";
+		if (bmi >= 35 && bmi <= 39.9) return "Obesidade grau II";
+		if (bmi >= 40) return "Obesidade grau III";
 		return "";
 	}
 }
