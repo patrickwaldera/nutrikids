@@ -4,7 +4,7 @@ export type Record = {
 	studentName: string;
 	classId: string;
 	className: string;
-	date: Date;
+	date: string;
 	ageAtMeasurement: number;
 	weight: number;
 	height: number;
