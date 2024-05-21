@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { BmiService } from '$lib/core/services/BmiService';
+    import { validateDateFormat } from '$lib/core/utils/Date';
     import { createEventDispatcher } from 'svelte';
     import { fade } from 'svelte/transition';
 
@@ -8,18 +10,34 @@
 
     let updatedRecord = { ...record };
 
+	let errorDateMessage = "";
+
     function closeModal() {
         dispatch('close');
     }
 
-    async function saveChanges() {
-        // Simula a chamada de atualização no serviço
-        // await RecordsService.updateRecord(updatedRecord);
+	$: updatedRecord.weight, updatedRecord.height, updateBmi();
 
-        // Despacha o evento com os dados atualizados
-        //dispatch('save', updatedRecord);
+    async function saveChanges() {
+		const isDateValid = validateDateFormat(updatedRecord.date);
+		if (!isDateValid) {
+			errorDateMessage = `O formato da data é inválido! Use o formato ${new Date().toLocaleDateString("pt-BR")}.`;
+			return;
+		}
+        dispatch('save', updatedRecord);
         closeModal();
     }
+
+	function updateBmi() {
+		const bmi = BmiService.calculateBmi(updatedRecord.weight, updatedRecord.height);
+		if (bmi) {
+			updatedRecord.bmi = bmi;
+			updatedRecord.notes = BmiService.getBmiStatus(bmi);
+		} else {
+			updatedRecord.bmi = null;
+			updatedRecord.notes = "";
+		}
+	}
 </script>
 
 <section transition:fade={{ duration: 200 }} class="w-full">
@@ -37,6 +55,20 @@
 					class="input-sm input-bordered w-full border-2 rounded-md bg-neutral-200"
 					bind:value={updatedRecord.studentName}
 				/>
+			</div>
+			<div class="form-control w-full">
+				<label class="label" for="date">
+					<span class="label-text">Data</span>
+				</label>
+				<input
+					id="date"
+					type="text"
+					class="input-sm input-bordered w-full border-2 rounded-md"
+					bind:value={updatedRecord.date}
+				/>
+				{#if errorDateMessage}
+					<p transition:fade={{ duration: 300 }} class="text-xs text-error mt-2">{errorDateMessage}</p>
+				{/if}
 			</div>
 			<div class="form-control w-full">
 				<label class="label" for="age">
