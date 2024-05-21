@@ -2,7 +2,7 @@ import type { Record } from "$lib/core/entities/Record";
 import type { IRecordRepository } from "$lib/core/repositories/RecordRepository";
 import axios from "axios";
 import { API_BASE_URL } from "./pocketbase";
-import { formatDateToYYYYMMDD } from "$lib/core/utils/Date";
+import { convertDateToDDMMYYYY, convertDateToYYYYMMDD, formatDateToYYYYMMDD } from "$lib/core/utils/Date";
 
 export class PBRecordsRepository implements IRecordRepository {
 	public async getRecordsBySchoolIdAndMonth(token: string, schoolId: string, month: number): Promise<Record[]> {
@@ -24,7 +24,7 @@ export class PBRecordsRepository implements IRecordRepository {
 					studentName: item.expand.student_id.name,
 					classId: item.expand.student_id.class_id,
 					className: item.expand.student_id.expand.class_id.name,
-					date: new Date(item.date),
+					date: convertDateToDDMMYYYY(new Date(item.date).toISOString().split('T')[0]),
 					ageAtMeasurement: item.age_at_measurement,
 					weight: item.weight,
 					height: item.height,
@@ -34,6 +34,40 @@ export class PBRecordsRepository implements IRecordRepository {
 			});	
 
 			return records as Record[];
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	public async update(token: string, record: Record): Promise<boolean> {
+		try {
+			await axios.patch(`${API_BASE_URL}/collections/measurements_records/records/${record.id}`, {
+				student_id: record.studentId,
+				date: convertDateToYYYYMMDD(record.date),
+				age_at_measurement: record.ageAtMeasurement,
+				weight: record.weight,
+				height: record.height,
+				bmi: record.bmi,
+				notes: record.notes,
+			}, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			return true;
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	public async delete(token: string, id: string): Promise<boolean> {
+		try {
+			await axios.delete(`${API_BASE_URL}/collections/measurements_records/records/${id}`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			return true;
 		} catch (error) {
 			throw error;
 		}

@@ -11,4 +11,20 @@ export class RecordsService {
 			throw error;
 		}
 	}
+
+	public static async update(token: string, record: Record): Promise<boolean> {
+		try {
+			return await RecordsService.recordsRepository.update(token, record);
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	public static async delete(token: string, id: string): Promise<boolean> {
+		try {
+			return await RecordsService.recordsRepository.delete(token, id);
+		} catch (error) {
+			throw error;
+		}
+	}
 }
