@@ -10,8 +10,6 @@
     import { fade } from "svelte/transition";
 
 	export let data;
-
-	$: records = data.records;
 	
 	let recordsByMonth = data.records;
 	let recordsToShow = recordsByMonth;
@@ -59,10 +57,11 @@
 
 	async function handleUpdate(event: any) {
 		const updatedRecord = event.detail;
-		const index = records!.findIndex((record) => record.id === updatedRecord.id);
+		const index = recordsToShow!.findIndex((record) => record.id === updatedRecord.id);
 		if (index !== -1) {
-			records![index] = updatedRecord;
+			recordsToShow![index] = updatedRecord;
 		}
+		recordsToShow = recordsToShow?.sort((a, b) => b.bmi - a.bmi);
 		try {
 			await RecordService.update(data.token!, updatedRecord);
 		} catch (error) {
@@ -81,10 +80,10 @@
 	}
 
 	async function handleDelete() {
-		const index = records!.findIndex((record) => record.id === selectedRecord!.id);
+		const index = recordsToShow!.findIndex((record) => record.id === selectedRecord!.id);
 		if (index !== -1) {
-			records!.splice(index, 1);
-			records = records;
+			recordsToShow!.splice(index, 1);
+			recordsToShow = recordsToShow;
 		}
 		try {
 			await RecordService.delete(data.token!, selectedRecord!.id);
