@@ -10,6 +10,10 @@
     export let form;
 </script>
 
+<svelte:head>
+	<title>NutriKids - Login</title>
+</svelte:head>
+
 <form method="POST" action="?/login" transition:fade={{ duration: 200 }} class="flex flex-col gap-4 rounded-box bg-base-200 p-6 max-w-md w-full">
     <h1 class="text-3xl font-bold self-center">Log in</h1>
 

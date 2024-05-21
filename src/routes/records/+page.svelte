@@ -107,6 +107,10 @@
 
 </script>
 
+<svelte:head>
+	<title>NutriKids - Registros</title>
+</svelte:head>
+
 <section in:fade={{ duration: 300 }} class="w-full">
 	{#if data.error}
 		<ErrorComponent errorMessage={data.error} />

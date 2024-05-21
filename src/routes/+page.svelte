@@ -33,8 +33,7 @@
 </script>
 
 <svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+	<title>NutriKids - {data.school?.name}</title>
 </svelte:head>
 
 <section in:fade={{ duration: 300 }} class="w-full">
