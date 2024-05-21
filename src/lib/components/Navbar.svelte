@@ -13,21 +13,9 @@
             </a>
         </li>
         <li>
-            <a href="/classes">
-                <i class='bx bx-merge'></i>
-                Turmas 
-            </a>
-        </li>
-        <li>
             <a href="/students">
                 <i class='bx bxs-graduation'></i>
                 Alunos 
-            </a>
-        </li>
-        <li>
-            <a href="/profile">
-                <i class='bx bxs-user-circle'></i>
-                Perfil 
             </a>
         </li>
         <li>
