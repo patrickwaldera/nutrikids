@@ -3,16 +3,20 @@
     import EditModal from "$lib/components/EditModal.svelte";
     import ErrorComponent from "$lib/components/ErrorComponent.svelte";
     import SkeletonTable from "$lib/components/SkeletonTable.svelte";
-    import type { Record } from "$lib/core/entities/Record.js";
-    import { RecordsService } from "$lib/core/services/RecordsService.js";
-    import { startLoading, stopLoading } from "$lib/core/utils/LoadingUtil.js";
+    import type { Record } from "$lib/core/entities/Record";
+    import { RecordService } from "$lib/core/services/RecordService";
+    import { startLoading, stopLoading } from "$lib/core/utils/LoadingUtil";
     import { isLoading } from "$lib/stores/LoadingStore.js";
     import { fade } from "svelte/transition";
 
 	export let data;
 
-	$: selectedMonth = data.selectedMonth;
 	$: records = data.records;
+	
+	let recordsByMonth = data.records;
+	let recordsToShow = recordsByMonth;
+	let selectedClass = "default";
+	let selectedMonth = data.currentMonth;
 
 	let showEditModal = false;
 	let showDeleteModal = false;
@@ -22,12 +26,24 @@
 		if (selectedMonth) {
 			startLoading();
 			try {
-				records = await RecordsService.getRecordsBySchoolIdAndMonth(data.token!, data.user.schoolId, selectedMonth);
+				recordsByMonth = await RecordService.getRecordsBySchoolIdAndMonth(data.token!, data.user.schoolId, selectedMonth);
+				recordsByMonth = recordsByMonth.sort((a, b) => b.bmi - a.bmi);
+				filterByClass();
 			} catch (error) {
 				data.error = "Erro ao buscar os registros.";
 			} finally {
 				stopLoading();
 			}
+		}
+	}
+
+	async function filterByClass() {
+		if (selectedClass) {
+			if (selectedClass === "default") {
+				recordsToShow = recordsByMonth;
+				return;
+			}			
+			recordsToShow = recordsByMonth!.filter((record) => record.classId === selectedClass);
 		}
 	}
 
@@ -48,7 +64,7 @@
 			records![index] = updatedRecord;
 		}
 		try {
-			await RecordsService.update(data.token!, updatedRecord);
+			await RecordService.update(data.token!, updatedRecord);
 		} catch (error) {
 			data.error = "Erro ao atualizar o registro.";
 		}
@@ -71,9 +87,21 @@
 			records = records;
 		}
 		try {
-			await RecordsService.delete(data.token!, selectedRecord!.id);
+			await RecordService.delete(data.token!, selectedRecord!.id);
 		} catch (error) {
 			data.error = "Erro ao deletar o registro.";
+		}
+	}
+
+	function getCssClassByBmi(bmi: number) {
+		if (bmi < 18.5) {
+			return "bg-red-300";
+		} else if (bmi >= 18.5 && bmi < 25) {
+			return "bg-green-300";
+		} else if (bmi >= 25 && bmi < 30) {
+			return "bg-yellow-300";
+		} else {
+			return "bg-red-400";
 		}
 	}
 
@@ -83,16 +111,24 @@
 	{#if data.error}
 		<ErrorComponent errorMessage={data.error} />
 	{:else}
-		<div class="flex justify-between items-center">
+		<div class="flex flex-wrap justify-between items-center gap-4">
 			<div>
 				<h1 class="text-3xl font-bold underline">Registros</h1>
 			</div>
-			<select class="select select-bordered w-48 max-w-xs" bind:value={data.selectedMonth} on:change={fetchRecordsByMonth}>
-				<option disabled selected>Selecione o mês</option>
-				{#each data.months ?? [] as {value, label}}
-				<option value={value}>{label}</option>
-				{/each}
-			</select>
+			<div class="flex gap-2">
+				<select class="select select-bordered max-w-xs" bind:value={selectedClass} on:change={filterByClass}>
+					<option value="default" selected>Selecione uma turma</option>
+					{#each data.classes ?? [] as {id, name}}
+					<option value={id}>{name}</option>
+					{/each}
+				</select>
+				<select class="select select-bordered max-w-xs" bind:value={selectedMonth} on:change={fetchRecordsByMonth}>
+					<option disabled selected>Selecione o mês</option>
+					{#each data.months ?? [] as {value, label}}
+					<option value={value}>{label}</option>
+					{/each}
+				</select>
+			</div>
 		</div>
 
 		{#if $isLoading}
@@ -100,16 +136,17 @@
 				<SkeletonTable />
 			</div>
 		{:else}
-			{#if records?.length === 0}
+			{#if recordsToShow?.length === 0}
 				<div class="mt-6">
 					<p>Nenhum registro encontrado.</p>
 				</div>
 			{/if}
-			{#if records && records.length > 0}
+			{#if recordsToShow && recordsToShow.length > 0}
 				<div class="overflow-x-auto mt-6">
 					<table class="table table-xs">
 					<thead>
 						<tr>
+							<th>Turma</th>
 							<th>Nome</th> 
 							<th>Data</th>
 							<th>Idade na medição</th> 
@@ -120,19 +157,20 @@
 						</tr>
 					</thead> 
 						<tbody>
-							{#each records as record}
-							<tr out:fade={{ duration: 200 }}>
+							{#each recordsToShow ?? [] as record}
+							<tr out:fade={{ duration: 200 }} class="hover cursor-pointer" on:click={() => openEditModal(record)}>
+								<td>{record.classAlias}</td>
 								<td class="text-nowrap">{record.studentName}</td>
-								<td>{record.date}</td>
+								<td class="text-nowrap">{record.date}</td>
 								<td>{record.ageAtMeasurement}</td>
 								<td>{record.weight}</td>
 								<td>{record.height}</td>
-								<td>{record.bmi}</td>
-								<td>{record.notes}</td>
+								<td class={getCssClassByBmi(record.bmi)}>{record.bmi}</td>
+								<td class={`${getCssClassByBmi(record.bmi)} text-nowrap`}>{record.notes}</td>
 								<td class="flex gap-2">
 									<button class="btn btn-xs btn-neutral" on:click={() => openEditModal(record)}>Editar</button>
-									<button class="btn btn-xs btn-error" on:click={() => openDeleteModal(record)}>
-										<i class='bx bxs-trash'></i>
+									<button class="btn btn-xs btn-error" on:click|stopPropagation={() => openDeleteModal(record)}>
+										<i class='bx bxs-trash text-white'></i>
 									</button>
 								</td>
 							</tr>
