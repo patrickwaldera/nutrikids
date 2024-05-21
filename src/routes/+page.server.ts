@@ -20,7 +20,7 @@ export const load: PageServerLoad = async (event) => {
 			const records = await RecordService.getRecordsBySchoolIdAndMonth(event.locals.token, event.locals.user?.schoolId!, currentMonth);
 			const pieChartData = initializePieChartData(classes, records);			
 
-			return { school, classes, pieChartData };
+			return { school, pieChartData };
 		}
 	} catch (error) {
 		return { error: "Ocorreu um erro ao buscar as informações da escola." };
