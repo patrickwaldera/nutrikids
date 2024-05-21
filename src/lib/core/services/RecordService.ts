@@ -2,11 +2,11 @@ import { PBRecordsRepository } from "$lib/infra/repositories_impl/PBRecordReposi
 import type { Record } from "../entities/Record";
 import type { IRecordRepository } from "../repositories/RecordRepository";
 
-export class RecordsService {
+export class RecordService {
 	private static recordsRepository: IRecordRepository = new PBRecordsRepository();
 	public static async getRecordsBySchoolIdAndMonth(token: string,	schoolId: string, month: number): Promise<Record[]> {
 		try {
-			return await RecordsService.recordsRepository.getRecordsBySchoolIdAndMonth(token, schoolId, month);
+			return await RecordService.recordsRepository.getRecordsBySchoolIdAndMonth(token, schoolId, month);
 		} catch (error) {
 			throw error;
 		}
@@ -14,7 +14,7 @@ export class RecordsService {
 
 	public static async update(token: string, record: Record): Promise<boolean> {
 		try {
-			return await RecordsService.recordsRepository.update(token, record);
+			return await RecordService.recordsRepository.update(token, record);
 		} catch (error) {
 			throw error;
 		}
@@ -22,7 +22,7 @@ export class RecordsService {
 
 	public static async delete(token: string, id: string): Promise<boolean> {
 		try {
-			return await RecordsService.recordsRepository.delete(token, id);
+			return await RecordService.recordsRepository.delete(token, id);
 		} catch (error) {
 			throw error;
 		}
