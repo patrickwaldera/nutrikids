@@ -89,7 +89,7 @@
 			</div>
 			<select class="select select-bordered w-48 max-w-xs" bind:value={data.selectedMonth} on:change={fetchRecordsByMonth}>
 				<option disabled selected>Selecione o mês</option>
-				{#each data.months as {value, label}}
+				{#each data.months ?? [] as {value, label}}
 				<option value={value}>{label}</option>
 				{/each}
 			</select>
