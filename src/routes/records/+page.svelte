@@ -1,6 +1,6 @@
 <script lang="ts">
     import DeleteModal from "$lib/components/DeleteModal.svelte";
-    import EditModal from "$lib/components/EditModal.svelte";
+    import EditRecordModal from "$lib/components/EditRecordModal.svelte";
     import ErrorComponent from "$lib/components/ErrorComponent.svelte";
     import SkeletonTable from "$lib/components/SkeletonTable.svelte";
     import type { Record } from "$lib/core/entities/Record";
@@ -186,11 +186,18 @@
 	{/if}
 
 	{#if showEditModal}
-		<EditModal record={selectedRecord} on:close={closeEditModal} on:save={handleUpdate}/>
+		<EditRecordModal record={selectedRecord} on:close={closeEditModal} on:save={handleUpdate}/>
 	{/if}
 
 	{#if showDeleteModal}
-		<DeleteModal record={selectedRecord} on:close={closeDeleteModal} on:delete={handleDelete}/>
+		<DeleteModal 
+			item={selectedRecord}
+			title="Deletar Registro"
+			message="Tem certeza que deseja excluir este registro?"
+			content="{selectedRecord?.studentName} - {selectedRecord?.date}"
+			on:close={closeDeleteModal}
+			on:delete={handleDelete}
+		/>
 	{/if}
 </section>
   
