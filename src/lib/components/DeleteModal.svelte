@@ -1,9 +1,12 @@
 <script lang="ts">
-    import type { Record } from '$lib/core/entities/Record';
     import { createEventDispatcher } from 'svelte';
     import { fade } from 'svelte/transition';
 
-    export let record: Record | null;
+    export let item: any | null;
+
+    export let title: string = 'Deletar Registro';
+    export let message: string = 'Tem certeza que deseja excluir este registro?';
+    export let content: string = '';    
 
     const dispatch = createEventDispatcher();
 
@@ -12,7 +15,7 @@
     }
 
     function deleteRecord() {
-		dispatch('delete', record);
+		dispatch('delete', item);
 		closeModal();
     }
 </script>
@@ -21,11 +24,11 @@
     <div class="modal-backdrop"></div>
     <div class="modal-container w-full rounded-lg p-4">
         <div class="flex justify-between items-center">
-            <h2 class="text-lg font-semibold">Deletar Registro</h2>
+            <h2 class="text-lg font-semibold">{title}</h2>
         </div>
         <div class="p-4">
-            <p>Tem certeza que deseja excluir o registro de:</p>
-			<p><b>{record?.studentName}</b> - <b>{record?.date}</b></p>
+            <p>{message}</p>
+			<p class="mt-4"><b>{content}</b></p>
             <div class="flex justify-end mt-4">
                 <button class="btn btn-error mr-2" on:click={deleteRecord}>Deletar</button>
                 <button class="btn btn-neutral" on:click={closeModal}>Cancelar</button>
