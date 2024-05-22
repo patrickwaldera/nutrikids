@@ -17,20 +17,20 @@ export class PBRecordsRepository implements IRecordRepository {
 			});
 			const data = response.data;
 			
-			const records = data.items.map((item: any) => {
+			const records = data.items.map((record: any) => {
 				return {
-					id: item.id,
-					studentId: item.student_id,
-					studentName: item.expand.student_id.name,
-					classId: item.expand.student_id.class_id,
-					className: item.expand.student_id.expand.class_id.name,
-					classAlias: item.expand.student_id.expand.class_id.alias,
-					date: convertDateToDDMMYYYY(new Date(item.date).toISOString().split('T')[0]),
-					ageAtMeasurement: item.age_at_measurement,
-					weight: item.weight,
-					height: item.height,
-					bmi: item.bmi,
-					notes: item.notes,
+					id: record.id,
+					studentId: record.student_id,
+					studentName: record.expand.student_id.name,
+					classId: record.expand.student_id.class_id,
+					className: record.expand.student_id.expand.class_id.name,
+					classAlias: record.expand.student_id.expand.class_id.alias,
+					date: record.date ? convertDateToDDMMYYYY(new Date(record.date).toISOString().split('T')[0]) : "",
+					ageAtMeasurement: record.age_at_measurement,
+					weight: record.weight,
+					height: record.height,
+					bmi: record.bmi,
+					notes: record.notes,
 				};
 			});	
 
@@ -44,7 +44,7 @@ export class PBRecordsRepository implements IRecordRepository {
 		try {
 			await axios.patch(`${API_BASE_URL}/collections/measurements_records/records/${record.id}`, {
 				student_id: record.studentId,
-				date: convertDateToYYYYMMDD(record.date),
+				date: record.date ? convertDateToYYYYMMDD(record.date) : "",
 				age_at_measurement: record.ageAtMeasurement,
 				weight: record.weight,
 				height: record.height,
