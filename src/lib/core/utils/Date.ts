@@ -17,7 +17,7 @@ export function convertDateToYYYYMMDD(date: string) {
 		const parts = date.split("/");
 		return `${parts[2]}-${parts[1]}-${parts[0]}`;
 	} catch (error) {
-		throw error;
+		return "";
 	}
 }
 
@@ -26,6 +26,22 @@ export function convertDateToDDMMYYYY(date: string) {
 		const parts = date.split("-");
 		return `${parts[2]}/${parts[1]}/${parts[0]}`;
 	} catch (error) {
-		throw error;
+		return "";
 	}
+}
+
+export function calculateAge(dateOfBirth: string) {
+    const [day, month, year] = dateOfBirth.split('/').map(Number);
+    const birthDate = new Date(year, month - 1, day);
+    const today = new Date();
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+
+    const currentMonth = today.getMonth();
+    const currentDay = today.getDate();
+    if (currentMonth < month - 1 || (currentMonth === month - 1 && currentDay < day)) {
+        age--;
+    }
+
+    return age;
 }
