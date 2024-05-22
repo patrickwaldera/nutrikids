@@ -3,7 +3,7 @@
     const year = new Date().getFullYear();
 </script>
 
-<footer class="flex flex-col sm:flex-row gap-8 justify-between p-10 bg-base-200">
+<footer class="flex gap-8 justify-between p-10 bg-base-200">
     <aside>
         <p class="text-sm flex items-center gap-2">
             <img alt="Logo" src={logo} class="w-8" />

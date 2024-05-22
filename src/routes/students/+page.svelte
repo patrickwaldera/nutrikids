@@ -83,11 +83,15 @@
 		<ErrorComponent errorMessage={data.error} />
 	{:else}
 		<div class="flex flex-wrap justify-between items-center gap-4">
-			<div>
+			<div class="flex flex-wrap gap-6 justify-between items-center">
 				<h1 class="text-3xl font-bold underline">Alunos</h1>
+				
+				<button class="sm:block hidden btn btn-primary" on:click={() => console.log("// TODO add")}>Adicionar registro</button>
+
+				<button class="sm:hidden btn btn-primary btn-circle btn-lg text-3xl flex items-center fixed bottom-10 right-10 shadow-lg shadow-neutral-400" on:click={() => console.log("// TODO add")}><i class='bx bx-plus'></i></button>
 			</div>
-			<div class="flex gap-2">
-				<select class="select select-bordered max-w-xs" bind:value={selectedClass} on:change={filterByClass}>
+			<div class="flex flex-wrap gap-2 max-w-full">
+				<select class="select select-bordered select-sm max-w-xs" bind:value={selectedClass} on:change={filterByClass}>
 					<option value="default" selected>Selecione uma turma</option>
 					{#each data.classes ?? [] as {id, name}}
 						<option value={id}>{name}</option>
@@ -113,9 +117,9 @@
 				</thead> 
 					<tbody>
 						{#each studentsToShow ?? [] as student}
-							<tr out:fade={{ duration: 200 }} class="hover cursor-pointer" on:click={() => openEditModal(student)}>
+							<tr out:fade={{ duration: 200 }} class="hover cursor-pointer text-nowrap" on:click={() => openEditModal(student)}>
 								<td>{student.name}</td>
-								<td class="text-nowrap">{student.birthDate}</td>
+								<td>{student.birthDate}</td>
 								<td>{student.birthDate ? calculateAge(student.birthDate) : ""}</td>
 								<td>{student.className}</td>
 
