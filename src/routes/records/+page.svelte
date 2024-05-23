@@ -4,6 +4,7 @@
     import type { Record } from "$lib/core/entities/Record";
     import { isLoading } from "$lib/stores/LoadingStore";
     import { RecordService } from "$lib/core/services/RecordService";
+    import { BmiService } from "$lib/core/services/BmiService";
     import { startLoading, stopLoading } from "$lib/core/utils/loadingUtil";
     import CreateRecordModal from "$lib/components/CreateRecordModal.svelte";
     import DeleteModal from "$lib/components/DeleteModal.svelte";
@@ -132,12 +133,16 @@
 		}
 	}
 
-	function getCssClassByBmi(bmi: number) {
-		if (bmi < 18.5) {
+	function getCssClassByBmi(age: number, bmi: number) {
+		if (!age || !bmi) {
+			return "bg-gray-300";
+		}
+		const bmiStatus = BmiService.getBmiStatus(age, bmi);
+		if (bmiStatus === "Muito abaixo do peso" || bmiStatus === "Abaixo do peso") {
 			return "bg-red-300";
-		} else if (bmi >= 18.5 && bmi < 25) {
+		} else if (bmiStatus === "Peso normal") {
 			return "bg-green-300";
-		} else if (bmi >= 25 && bmi < 30) {
+		} else if (bmiStatus === "Acima do peso") {
 			return "bg-yellow-300";
 		} else {
 			return "bg-red-400";
@@ -213,8 +218,8 @@
 								<td>{record.ageAtMeasurement}</td>
 								<td>{record.weight}</td>
 								<td>{record.height}</td>
-								<td class={getCssClassByBmi(record.bmi)}>{record.bmi}</td>
-								<td class={`${getCssClassByBmi(record.bmi)} text-nowrap`}>{record.notes}</td>
+								<td class={getCssClassByBmi(record.ageAtMeasurement, record.bmi)}>{record.bmi}</td>
+								<td class={`${getCssClassByBmi(record.ageAtMeasurement, record.bmi)} text-nowrap`}>{record.notes}</td>
 								<td class="flex gap-2">
 									<button class="btn btn-xs btn-neutral" on:click|stopPropagation={() => openEditModal(record)}>Editar</button>
 									<button class="btn btn-xs btn-error" on:click|stopPropagation={() => openDeleteModal(record)}>

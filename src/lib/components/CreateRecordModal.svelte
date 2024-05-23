@@ -57,9 +57,9 @@
 
 	function updateBmi() {
 		const bmi = BmiService.calculateBmi(record.weight, record.height);
-		if (bmi) {
+		if (bmi && record.ageAtMeasurement > 0) {
 			record.bmi = bmi;
-			record.notes = BmiService.getBmiStatus(bmi);
+			record.notes = BmiService.getBmiStatus(record.ageAtMeasurement, bmi);
 		} else {
 			record.bmi = 0;
 			record.notes = "";

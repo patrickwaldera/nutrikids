@@ -32,9 +32,9 @@
 
 	function updateBmi() {
 		const bmi = BmiService.calculateBmi(updatedRecord.weight, updatedRecord.height);
-		if (bmi) {
+		if (bmi && updatedRecord.ageAtMeasurement > 0) {
 			updatedRecord.bmi = bmi;
-			updatedRecord.notes = BmiService.getBmiStatus(bmi);
+			updatedRecord.notes = BmiService.getBmiStatus(updatedRecord.ageAtMeasurement, bmi);
 		} else {
 			updatedRecord.bmi = null;
 			updatedRecord.notes = "";
@@ -93,6 +93,7 @@
 					type="number"
 					class="input-sm input-bordered w-full border-2 rounded-md"
 					bind:value={updatedRecord.weight}
+					step="0.1"
 				/>
 			</div>
 			<div class="form-control w-full">

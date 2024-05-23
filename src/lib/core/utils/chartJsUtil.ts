@@ -40,7 +40,7 @@ export function initializePieChartData(classes: Class[], records: Record[]) {
 	}))
 
 	records.forEach(record => {
-		const status = BmiService.getBmiStatus(record.bmi);
+		const status = BmiService.getBmiStatus(record.ageAtMeasurement, record.bmi);
 		pieChartData.find((bmiRecord: any) => bmiRecord.id === record.classId)!.counts[status]++;
 		
 	});
