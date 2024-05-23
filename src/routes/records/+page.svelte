@@ -91,17 +91,10 @@
 
 	async function handleDelete() {
 		const recordId = selectedRecord!.id;
-		let index = recordsByMonth!.findIndex((record) => record.id === recordId);
-		if (index !== -1) {
-			recordsByMonth!.splice(index, 1);
-			recordsByMonth = recordsByMonth;
-		}
 
-		index = recordsToShow!.findIndex((record) => record.id === recordId);
-		if (index !== -1) {
-			recordsToShow!.splice(index, 1);
-			recordsToShow = recordsToShow;
-		}
+		recordsByMonth = recordsByMonth!.filter((record) => record.id !== recordId);
+		recordsToShow = recordsToShow!.filter((record) => record.id !== recordId);
+
 		try {
 			await RecordService.delete(data.token!, recordId);
 		} catch (error) {

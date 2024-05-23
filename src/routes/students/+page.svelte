@@ -70,17 +70,10 @@
 
 	async function handleDelete() {
 		const studentId = selectedStudent!.id;
-		let index = students!.findIndex((student) => student.id === studentId);
-		if (index !== -1) {
-			students!.splice(index, 1);
-			students = students;
-		}
-		
-		index = studentsToShow!.findIndex((record) => record.id === studentId);
-		if (index !== -1) {
-			studentsToShow!.splice(index, 1);
-			studentsToShow = studentsToShow;
-		}
+
+		students = students!.filter((student) => student.id !== studentId);
+		studentsToShow = studentsToShow!.filter((record) => record.id !== studentId);
+
 		try {
 			await StudentService.delete(data.token!, studentId);
 		} catch (error) {
