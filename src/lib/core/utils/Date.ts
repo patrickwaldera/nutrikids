@@ -9,7 +9,24 @@ export function formatDateToYYYYMMDD(date: Date) {
 
 export function validateDateFormat(date: string) {
 	const regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
-	return regex.test(date);
+
+	if (!regex.test(date)) {
+		return false;
+	}
+
+	const [day, month, year] = date.split('/').map(Number);
+
+	const dateObj = new Date(year, month - 1, day);
+
+	if (
+        dateObj.getFullYear() !== year ||
+        dateObj.getMonth() !== month - 1 ||
+        dateObj.getDate() !== day
+    ) {
+        return false;
+    }
+
+	return true;
 }
 
 export function convertDateToYYYYMMDD(date: string) {
@@ -44,4 +61,21 @@ export function calculateAge(dateOfBirth: string) {
     }
 
     return age;
+}
+
+export function formatDateInput(event: Event) {
+    let value = (event.target as HTMLInputElement).value;
+    value = value.replace(/\D/g, '');
+
+    if (value.length > 8) {
+        value = value.substring(0, 8);
+    }
+
+    if (value.length > 2 && value.length <= 4) {
+        value = value.replace(/(\d{2})(\d+)/, '$1/$2');
+    } else if (value.length > 4) {
+        value = value.replace(/(\d{2})(\d{2})(\d+)/, '$1/$2/$3');
+    }
+
+    (event.target as HTMLInputElement).value = value;
 }
