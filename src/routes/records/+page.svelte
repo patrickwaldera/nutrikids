@@ -222,6 +222,9 @@
 								</td>
 							</tr>
 							{/each}
+							<tr>
+								<td class="text-left" colspan="4"><b>Total: {recordsToShow.length}</b></td>
+							</tr>
 						</tbody>
 					</table>
 				</div>
