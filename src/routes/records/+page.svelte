@@ -1,4 +1,5 @@
 <script lang="ts">
+    import CreateRecordModal from "$lib/components/CreateRecordModal.svelte";
     import DeleteModal from "$lib/components/DeleteModal.svelte";
     import EditRecordModal from "$lib/components/EditRecordModal.svelte";
     import ErrorComponent from "$lib/components/ErrorComponent.svelte";
@@ -18,6 +19,7 @@
 
 	let showEditModal = false;
 	let showDeleteModal = false;
+	let showCreateModal = false;
 	let selectedRecord: Record | null = null;
 
 	async function fetchRecordsByMonth() {
@@ -57,7 +59,13 @@
 
 	async function handleUpdate(event: any) {
 		const updatedRecord = event.detail;
-		const index = recordsToShow!.findIndex((record) => record.id === updatedRecord.id);
+		let index = recordsByMonth!.findIndex((record) => record.id === updatedRecord.id);
+		if (index !== -1) {
+			recordsByMonth![index] = updatedRecord;
+		}
+		recordsByMonth = recordsByMonth?.sort((a, b) => b.bmi - a.bmi);
+
+		index = recordsToShow!.findIndex((record) => record.id === updatedRecord.id);
 		if (index !== -1) {
 			recordsToShow![index] = updatedRecord;
 		}
@@ -80,15 +88,46 @@
 	}
 
 	async function handleDelete() {
-		const index = recordsToShow!.findIndex((record) => record.id === selectedRecord!.id);
+		const recordId = selectedRecord!.id;
+		let index = recordsByMonth!.findIndex((record) => record.id === recordId);
+		if (index !== -1) {
+			recordsByMonth!.splice(index, 1);
+			recordsByMonth = recordsByMonth;
+		}
+
+		index = recordsToShow!.findIndex((record) => record.id === recordId);
 		if (index !== -1) {
 			recordsToShow!.splice(index, 1);
 			recordsToShow = recordsToShow;
 		}
 		try {
-			await RecordService.delete(data.token!, selectedRecord!.id);
+			await RecordService.delete(data.token!, recordId);
 		} catch (error) {
 			data.error = "Erro ao deletar o registro.";
+		}
+	}
+
+	function openCreateModal() {
+		showCreateModal = true;
+	}
+
+	function closeCreateModal() {
+		showCreateModal = false;
+	}
+
+	async function handleCreate(event: any) {
+		const newRecord = event.detail;
+		try {
+			const recordId = await RecordService.create(data.token!, newRecord);
+			newRecord.id = recordId;
+			recordsByMonth = [...recordsByMonth!, newRecord];
+			recordsByMonth = recordsByMonth?.sort((a, b) => b.bmi - a.bmi);
+			if (selectedClass === "default" || selectedClass === newRecord.classId) {
+				recordsToShow = [...recordsToShow!, newRecord];
+				recordsToShow = recordsToShow?.sort((a, b) => b.bmi - a.bmi);
+			}
+		} catch (error) {
+			data.error = "Erro ao criar o registro.";
 		}
 	}
 
@@ -118,9 +157,9 @@
 			<div class="flex flex-wrap gap-6 justify-between items-center">
 				<h1 class="text-3xl font-bold underline">Registros</h1>
 
-				<button class="sm:block hidden btn btn-primary" on:click={() => console.log("// TODO add")}>Adicionar registro</button>
+				<button class="sm:block hidden btn btn-primary" on:click|stopPropagation={openCreateModal}>Adicionar registro</button>
 
-				<button class="sm:hidden btn btn-primary btn-circle btn-lg text-3xl flex items-center fixed bottom-10 right-10 shadow-lg shadow-neutral-400 z-20" on:click={() => console.log("// TODO add")}><i class='bx bx-plus'></i></button>
+				<button class="sm:hidden btn btn-primary btn-circle btn-lg text-3xl flex items-center fixed bottom-10 right-10 shadow-lg shadow-neutral-400 z-20" on:click|stopPropagation={openCreateModal}><i class='bx bx-plus'></i></button>
 
 			</div>
 			<div class="flex flex-wrap gap-2 max-w-full items-center">
@@ -166,7 +205,7 @@
 					</thead> 
 						<tbody>
 							{#each recordsToShow ?? [] as record}
-							<tr out:fade={{ duration: 200 }} class="hover cursor-pointer" on:click={() => openEditModal(record)}>
+							<tr out:fade={{ duration: 200 }} class="hover cursor-pointer" on:click|stopPropagation={() => openEditModal(record)}>
 								<td>{record.classAlias}</td>
 								<td class="text-nowrap">{record.studentName}</td>
 								<td class="text-nowrap">{record.date}</td>
@@ -176,7 +215,7 @@
 								<td class={getCssClassByBmi(record.bmi)}>{record.bmi}</td>
 								<td class={`${getCssClassByBmi(record.bmi)} text-nowrap`}>{record.notes}</td>
 								<td class="flex gap-2">
-									<button class="btn btn-xs btn-neutral" on:click={() => openEditModal(record)}>Editar</button>
+									<button class="btn btn-xs btn-neutral" on:click|stopPropagation={() => openEditModal(record)}>Editar</button>
 									<button class="btn btn-xs btn-error" on:click|stopPropagation={() => openDeleteModal(record)}>
 										<i class='bx bxs-trash text-white'></i>
 									</button>
@@ -203,6 +242,10 @@
 			on:close={closeDeleteModal}
 			on:delete={handleDelete}
 		/>
+	{/if}
+
+	{#if showCreateModal}
+		<CreateRecordModal students={data?.students} on:close={closeCreateModal} on:create={handleCreate}/>
 	{/if}
 </section>
   
