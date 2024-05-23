@@ -20,22 +20,36 @@
 	let showCreateModal = false;
 	let selectedStudent: Student | null = null;
 
-	function filterByClass() {
+	function openModal(modalType: string, student: Student | null = null) {
+		if (modalType === "edit") {
+			showEditModal = true;
+			selectedStudent = student;
+		} else if (modalType === "delete") {
+			showDeleteModal = true;
+			selectedStudent = student;
+		} else if (modalType === "create") {
+			showCreateModal = true;
+		}
+	}
+
+	function closeModal(modalType: string) {
+		if (modalType === "edit") {
+			showEditModal = false;
+			selectedStudent = null;
+		} else if (modalType === "delete") {
+			showDeleteModal = false;
+			selectedStudent = null;
+		} else if (modalType === "create") {
+			showCreateModal = false;
+		}
+	}
+
+	function filterStudentsByClass() {
 		if (selectedClass === "default") {
 			studentsToShow = students;
 		} else {
 			studentsToShow = students?.filter((student: any) => student.classId === selectedClass);
 		}
-	}
-
-	function openEditModal(record: Student) {
-		showEditModal = true;
-		selectedStudent = record;
-	}
-
-	function closeEditModal() {
-		showEditModal = false;
-		selectedStudent = null;
 	}
 
 	async function handleUpdate(event: any) {
@@ -58,16 +72,6 @@
 		}
 	}
 
-	function openDeleteModal(record: Student) {
-		showDeleteModal = true;
-		selectedStudent = record;
-	}
-
-	function closeDeleteModal() {
-		showDeleteModal = false;
-		selectedStudent = null;
-	}
-
 	async function handleDelete() {
 		const studentId = selectedStudent!.id;
 
@@ -79,14 +83,6 @@
 		} catch (error) {
 			data.error = "Erro ao deletar o registro.";
 		}
-	}
-
-	function openCreateModal() {
-		showCreateModal = true;
-	}
-
-	function closeCreateModal() {
-		showCreateModal = false;
 	}
 
 	async function handleCreate(event: any) {
@@ -119,12 +115,14 @@
 			<div class="flex flex-wrap gap-6 justify-between items-center">
 				<h1 class="text-3xl font-bold underline">Alunos</h1>
 				
-				<button class="sm:block hidden btn btn-primary" on:click|stopPropagation={() => openCreateModal()}>Adicionar aluno</button>
+				<button class="sm:block hidden btn btn-primary" on:click|stopPropagation={() => openModal("create")}>Adicionar aluno</button>
 
-				<button class="sm:hidden btn btn-primary btn-circle btn-lg text-3xl flex items-center fixed bottom-10 right-10 shadow-lg shadow-neutral-400 z-20" on:click|stopPropagation={() => openCreateModal()}><i class='bx bx-plus'></i></button>
+				<button class="sm:hidden btn btn-primary btn-circle btn-lg text-3xl flex items-center fixed bottom-10 right-10 shadow-lg shadow-neutral-400 z-20" on:click|stopPropagation={() => openModal("create")}>
+					<i class='bx bx-plus'></i>
+				</button>
 			</div>
 			<div class="flex flex-wrap gap-2 max-w-full">
-				<select class="select select-bordered select-sm max-w-xs" bind:value={selectedClass} on:change={filterByClass}>
+				<select class="select select-bordered select-sm max-w-xs" bind:value={selectedClass} on:change={filterStudentsByClass}>
 					<option value="default" selected>Selecione uma turma</option>
 					{#each data.classes ?? [] as {id, name}}
 						<option value={id}>{name}</option>
@@ -150,15 +148,15 @@
 				</thead> 
 					<tbody>
 						{#each studentsToShow ?? [] as student}
-							<tr transition:fade={{ duration: 300 }} class="hover cursor-pointer text-nowrap" on:click|stopPropagation={() => openEditModal(student)}>
+							<tr transition:fade={{ duration: 300 }} class="hover cursor-pointer text-nowrap" on:click|stopPropagation={() => openModal("edit", student)}>
 								<td>{student.name}</td>
 								<td>{student.birthDate}</td>
 								<td>{student.birthDate ? calculateAge(student.birthDate) : ""}</td>
 								<td>{student.className}</td>
 
 								<td class="flex gap-2">
-									<button class="btn btn-xs btn-neutral" on:click|stopPropagation={() => openEditModal(student)}>Editar</button>
-									<button class="btn btn-xs btn-error" on:click|stopPropagation={() => openDeleteModal(student)}>
+									<button class="btn btn-xs btn-neutral" on:click|stopPropagation={() => openModal("edit", student)}>Editar</button>
+									<button class="btn btn-xs btn-error" on:click|stopPropagation={() => openModal("delete", student)}>
 										<i class='bx bxs-trash text-white'></i>
 									</button>
 								</td>
@@ -174,7 +172,7 @@
 	{/if}
 
 	{#if showEditModal}
-		<EditStudentModal student={selectedStudent} classes={data?.classes} on:close={closeEditModal} on:save={handleUpdate}/>
+		<EditStudentModal student={selectedStudent} classes={data?.classes} on:close={() => closeModal("edit")} on:save={handleUpdate}/>
 	{/if}
 
 	{#if showDeleteModal}
@@ -183,12 +181,12 @@
 			title="Tem certeza que deseja remover este aluno?"
 			message="Esta ação não pode ser desfeita."
 			content="{selectedStudent?.name}"
-			on:close={closeDeleteModal}
+			on:close={() => closeModal("delete")}
 			on:delete={handleDelete}
 		/>
 	{/if}
 
 	{#if showCreateModal}
-		<CreateStudentModal classes={data?.classes} on:close={closeCreateModal} on:create={handleCreate}/>
+		<CreateStudentModal classes={data?.classes} on:close={() => closeModal("create")} on:create={handleCreate}/>
 	{/if}
 </section>

@@ -24,13 +24,37 @@
 	let showCreateModal = false;
 	let selectedRecord: Record | null = null;
 
+	function openModal(modalType: string, record: Record | null = null) {
+		if (modalType === "edit") {
+			showEditModal = true;
+			selectedRecord = record;
+		} else if (modalType === "delete") {
+			showDeleteModal = true;
+			selectedRecord = record;
+		} else if (modalType === "create") {
+			showCreateModal = true;
+		}
+	}
+
+	function closeModal(modalType: string) {
+		if (modalType === "edit") {
+			showEditModal = false;
+			selectedRecord = null;
+		} else if (modalType === "delete") {
+			showDeleteModal = false;
+			selectedRecord = null;
+		} else if (modalType === "create") {
+			showCreateModal = false;
+		}
+	}
+
 	async function fetchRecordsByMonth() {
 		if (selectedMonth) {
 			startLoading();
 			try {
 				recordsByMonth = await RecordService.getRecordsBySchoolIdAndMonth(data.token!, data.user.schoolId, selectedMonth);
 				recordsByMonth = recordsByMonth.sort((a, b) => b.bmi - a.bmi);
-				filterByClass();
+				filterRecordsByClass();
 			} catch (error) {
 				data.error = "Erro ao buscar os registros.";
 			} finally {
@@ -39,7 +63,7 @@
 		}
 	}
 
-	async function filterByClass() {
+	async function filterRecordsByClass() {
 		if (selectedClass) {
 			if (selectedClass === "default") {
 				recordsToShow = recordsByMonth;
@@ -47,16 +71,6 @@
 			}			
 			recordsToShow = recordsByMonth!.filter((record) => record.classId === selectedClass);
 		}
-	}
-
-	function openEditModal(record: Record) {
-		showEditModal = true;
-		selectedRecord = record;
-	}
-
-	function closeEditModal() {
-		showEditModal = false;
-		selectedRecord = null;
 	}
 
 	async function handleUpdate(event: any) {
@@ -79,16 +93,6 @@
 		}
 	}
 
-	function openDeleteModal(record: Record) {
-		showDeleteModal = true;
-		selectedRecord = record;
-	}
-
-	function closeDeleteModal() {
-		showDeleteModal = false;
-		selectedRecord = null;
-	}
-
 	async function handleDelete() {
 		const recordId = selectedRecord!.id;
 
@@ -100,14 +104,6 @@
 		} catch (error) {
 			data.error = "Erro ao deletar o registro.";
 		}
-	}
-
-	function openCreateModal() {
-		showCreateModal = true;
-	}
-
-	function closeCreateModal() {
-		showCreateModal = false;
 	}
 
 	async function handleCreate(event: any) {
@@ -156,13 +152,13 @@
 			<div class="flex flex-wrap gap-6 justify-between items-center">
 				<h1 class="text-3xl font-bold underline">Registros</h1>
 
-				<button class="sm:block hidden btn btn-primary" on:click|stopPropagation={openCreateModal}>Adicionar registro</button>
+				<button class="sm:block hidden btn btn-primary" on:click|stopPropagation={() => openModal("create")}>Adicionar registro</button>
 
-				<button class="sm:hidden btn btn-primary btn-circle btn-lg text-3xl flex items-center fixed bottom-10 right-10 shadow-lg shadow-neutral-400 z-20" on:click|stopPropagation={openCreateModal}><i class='bx bx-plus'></i></button>
+				<button class="sm:hidden btn btn-primary btn-circle btn-lg text-3xl flex items-center fixed bottom-10 right-10 shadow-lg shadow-neutral-400 z-20" on:click|stopPropagation={() => openModal("create")}><i class='bx bx-plus'></i></button>
 
 			</div>
 			<div class="flex flex-wrap gap-2 max-w-full items-center">
-				<select class="select select-bordered select-sm max-w-xs" bind:value={selectedClass} on:change={filterByClass}>
+				<select class="select select-bordered select-sm max-w-xs" bind:value={selectedClass} on:change={filterRecordsByClass}>
 					<option value="default" selected>Selecione uma turma</option>
 					{#each data.classes ?? [] as {id, name}}
 					<option value={id}>{name}</option>
@@ -204,7 +200,7 @@
 					</thead> 
 						<tbody>
 							{#each recordsToShow ?? [] as record}
-							<tr out:fade={{ duration: 200 }} class="hover cursor-pointer" on:click|stopPropagation={() => openEditModal(record)}>
+							<tr out:fade={{ duration: 200 }} class="hover cursor-pointer" on:click|stopPropagation={() => openModal("edit", record)}>
 								<td>{record.classAlias}</td>
 								<td class="text-nowrap">{record.studentName}</td>
 								<td class="text-nowrap">{record.date}</td>
@@ -214,8 +210,8 @@
 								<td class={getCssClassByBmi(record.ageAtMeasurement, record.bmi)}>{record.bmi}</td>
 								<td class={`${getCssClassByBmi(record.ageAtMeasurement, record.bmi)} text-nowrap`}>{record.notes}</td>
 								<td class="flex gap-2">
-									<button class="btn btn-xs btn-neutral" on:click|stopPropagation={() => openEditModal(record)}>Editar</button>
-									<button class="btn btn-xs btn-error" on:click|stopPropagation={() => openDeleteModal(record)}>
+									<button class="btn btn-xs btn-neutral" on:click|stopPropagation={() => openModal("edit", record)}>Editar</button>
+									<button class="btn btn-xs btn-error" on:click|stopPropagation={() => openModal("delete", record)}>
 										<i class='bx bxs-trash text-white'></i>
 									</button>
 								</td>
@@ -232,7 +228,7 @@
 	{/if}
 
 	{#if showEditModal}
-		<EditRecordModal record={selectedRecord} on:close={closeEditModal} on:save={handleUpdate}/>
+		<EditRecordModal record={selectedRecord} on:close={() => closeModal("edit")} on:save={handleUpdate}/>
 	{/if}
 
 	{#if showDeleteModal}
@@ -241,13 +237,13 @@
 			title="Deletar Registro"
 			message="Tem certeza que deseja excluir este registro?"
 			content="{selectedRecord?.studentName} - {selectedRecord?.date}"
-			on:close={closeDeleteModal}
+			on:close={() => closeModal("delete")}
 			on:delete={handleDelete}
 		/>
 	{/if}
 
 	{#if showCreateModal}
-		<CreateRecordModal students={data?.students} on:close={closeCreateModal} on:create={handleCreate}/>
+		<CreateRecordModal students={data?.students} on:close={() => closeModal("create")} on:create={handleCreate}/>
 	{/if}
 </section>
   
