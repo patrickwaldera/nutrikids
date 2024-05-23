@@ -2,7 +2,7 @@
     import type { Record } from '$lib/core/entities/Record';
     import type { Student } from '$lib/core/entities/Student';
     import { BmiService } from '$lib/core/services/BmiService';
-    import { convertDateToDDMMYYYY, formatDateInput, validateDateFormat } from '$lib/core/utils/Date';
+    import { calculateAge, convertDateToDDMMYYYY, formatDateInput, validateDateFormat } from '$lib/core/utils/Date';
     import { clickOutside } from '$lib/core/utils/clickOutside';
     import { createEventDispatcher } from 'svelte';
     import { fade } from 'svelte/transition';
@@ -96,6 +96,7 @@
 		record.classId = student.classId;
 		record.className = student.className;
 		record.classAlias = student.classAlias;
+		record.ageAtMeasurement = student.birthDate ? calculateAge(student.birthDate) : 0;
 	}
 </script>
 
