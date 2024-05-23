@@ -9,7 +9,7 @@ import { convertDateToDDMMYYYY, convertDateToYYYYMMDD } from "$lib/core/utils/da
 export class PBStudentRepository implements IStudentRepository {
 	public async getManyBySchoolId(token: string, schoolId: string): Promise<Student[]> {
 		try {
-			const response = await axios.get(`${API_BASE_URL}/collections/students/records?expand=class_id&filter=(class_id.school_id='${schoolId}')`, {
+			const response = await axios.get(`${API_BASE_URL}/collections/students/records?expand=class_id&filter=(class_id.school_id='${schoolId}')&perPage=500`, {
 				headers: {
 					"Authorization": `Bearer ${token}`
 				}
