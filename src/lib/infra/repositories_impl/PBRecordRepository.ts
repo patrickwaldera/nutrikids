@@ -73,4 +73,25 @@ export class PBRecordsRepository implements IRecordRepository {
 			throw error;
 		}
 	}
+
+	public async create(token: string, record: Record): Promise<string> {
+		try {
+			const response = await axios.post(`${API_BASE_URL}/collections/measurements_records/records`, {
+				student_id: record.studentId,
+				date: record.date ? convertDateToYYYYMMDD(record.date) : "",
+				age_at_measurement: record.ageAtMeasurement,
+				weight: record.weight,
+				height: record.height,
+				bmi: record.bmi,
+				notes: record.notes,
+			}, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			return response.data.id;
+		} catch (error) {
+			throw error;
+		}
+	}
 }

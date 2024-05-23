@@ -27,4 +27,12 @@ export class RecordService {
 			throw error;
 		}
 	}
+
+	public static async create(token: string, record: Record): Promise<string> {
+		try {
+			return await RecordService.recordsRepository.create(token, record);
+		} catch (error) {
+			throw error;
+		}
+	}
 }
