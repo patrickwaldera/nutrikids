@@ -45,20 +45,37 @@ export class PBStudentRepository implements IStudentRepository {
 	}
 
 	public async update(token: string, student: Student): Promise<boolean> {
-		console.log("🚀 ~ PBStudentRepository ~ update ~ student:", student)
 		try {
 			const response = await axios.patch(`${API_BASE_URL}/collections/students/records/${student.id}`, {
 				name: student.name,
-				birth_date: student.birthDate ? convertDateToYYYYMMDD(student.birthDate) : ""
+				birth_date: student.birthDate ? convertDateToYYYYMMDD(student.birthDate) : "",
+				class_id: student.classId
+			}, {
+				headers: {
+					"Authorization": `Bearer ${token}`
+				}
+			});			
+			return true;
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	public async create(token: string, student: Student): Promise<string> {
+		try {
+			const response = await axios.post(`${API_BASE_URL}/collections/students/records`, {
+				name: student.name,
+				birth_date: student.birthDate ? convertDateToYYYYMMDD(student.birthDate) : "",
+				class_id: student.classId
 			}, {
 				headers: {
 					"Authorization": `Bearer ${token}`
 				}
 			});
 
-			console.log("🚀 ~ PBStudentRepository ~ update ~ response:", response)
-			
-			return true;
+			const data = response.data;
+
+			return data.id;
 		} catch (error) {
 			throw error;
 		}

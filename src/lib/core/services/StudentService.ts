@@ -27,5 +27,13 @@ export class StudentService {
 		} catch (error) {
 			throw error;
 		}
-	}	
+	}
+
+	public static create(token: string, student: Student): Promise<string> {
+		try {
+			return StudentService.studentRepository.create(token, student);
+		} catch (error) {
+			throw error;
+		}
+	}
 }
