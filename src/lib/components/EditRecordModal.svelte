@@ -1,6 +1,7 @@
 <script lang="ts">
     import { BmiService } from '$lib/core/services/BmiService';
     import { validateDateFormat } from '$lib/core/utils/Date';
+    import { clickOutside } from '$lib/core/utils/clickOutside';
     import { createEventDispatcher } from 'svelte';
     import { fade } from 'svelte/transition';
 
@@ -42,8 +43,9 @@
 
 <section transition:fade={{ duration: 200 }} class="w-full">
 	<div class="modal-backdrop"></div>
-    <div class="modal-container w-full rounded-lg">
+    <div class="modal-container w-full rounded-lg" use:clickOutside={closeModal}>
 		<form class="w-full flex flex-col gap-2" on:submit|preventDefault={saveChanges}>
+			<h2 class="text-lg font-semibold">Editar Registro</h2>
 			<div class="form-control w-full">
 				<label class="label" for="name">
 					<span class="label-text">Nome</span>

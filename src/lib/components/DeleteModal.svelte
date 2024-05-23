@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { clickOutside } from '$lib/core/utils/clickOutside';
     import { createEventDispatcher } from 'svelte';
     import { fade } from 'svelte/transition';
 
@@ -22,7 +23,7 @@
 
 <section transition:fade={{ duration: 200 }} class="w-full">
     <div class="modal-backdrop"></div>
-    <div class="modal-container w-full rounded-lg p-4">
+    <div class="modal-container w-full rounded-lg p-4" use:clickOutside={closeModal}>
         <div class="flex justify-between items-center">
             <h2 class="text-lg font-semibold">{title}</h2>
         </div>
