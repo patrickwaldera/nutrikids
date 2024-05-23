@@ -1,7 +1,7 @@
+import type { Class } from "$lib/core/entities/Class";
+import type { School } from "$lib/core/entities/School";
+import type { ISchoolRepository } from "$lib/core/repositories/SchoolRepository";
 import { PBSchoolRepository } from "$lib/infra/repositories_impl/PBSchoolRepository";
-import type { Class } from "../entities/Class";
-import type { School } from "../entities/School";
-import type { ISchoolRepository } from "../repositories/SchoolRepository";
 
 export class SchoolService {
 	private static schoolRepository: ISchoolRepository = new PBSchoolRepository();

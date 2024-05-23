@@ -1,10 +1,11 @@
 <script lang="ts">
-    import type { Class } from '$lib/core/entities/Class';
-    import type { Student } from '$lib/core/entities/Student';
-    import { formatDateInput, validateDateFormat } from '$lib/core/utils/Date';
-    import { clickOutside } from '$lib/core/utils/clickOutside';
 	import { createEventDispatcher } from 'svelte';
     import { fade } from 'svelte/transition';
+
+    import type { Class } from '$lib/core/entities/Class';
+    import type { Student } from '$lib/core/entities/Student';
+    import { formatDateInput, validateDateFormat } from '$lib/core/utils/dateUtil';
+    import { clickOutside } from '$lib/core/utils/clickOutsideUtil';
 	
     const dispatch = createEventDispatcher();
 

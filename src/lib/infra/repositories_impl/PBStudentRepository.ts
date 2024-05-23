@@ -1,8 +1,10 @@
-import type { IStudentRepository } from "$lib/core/repositories/StudentRepository";
 import axios from "axios";
+
 import { API_BASE_URL } from "./pocketbase";
+
 import type { Student } from "$lib/core/entities/Student";
-import { convertDateToDDMMYYYY, convertDateToYYYYMMDD } from "$lib/core/utils/Date";
+import type { IStudentRepository } from "$lib/core/repositories/StudentRepository";
+import { convertDateToDDMMYYYY, convertDateToYYYYMMDD } from "$lib/core/utils/dateUtil";
 
 export class PBStudentRepository implements IStudentRepository {
 	public async getManyBySchoolId(token: string, schoolId: string): Promise<Student[]> {

@@ -1,7 +1,8 @@
 <script lang="ts">
-    import { clickOutside } from '$lib/core/utils/clickOutside';
-    import { createEventDispatcher } from 'svelte';
     import { fade } from 'svelte/transition';
+    import { createEventDispatcher } from 'svelte';
+
+    import { clickOutside } from '$lib/core/utils/clickOutsideUtil';
 
     export let item: any | null;
 

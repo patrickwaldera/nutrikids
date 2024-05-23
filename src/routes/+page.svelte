@@ -1,7 +1,8 @@
 <script lang="ts">
-    import ErrorComponent from "$lib/components/ErrorComponent.svelte";
-    import Chart from "$lib/components/PieChart.svelte";
     import { fade } from "svelte/transition";
+	
+    import Chart from "$lib/components/PieChart.svelte";
+    import ErrorComponent from "$lib/components/ErrorComponent.svelte";
 
 	export let data;
 

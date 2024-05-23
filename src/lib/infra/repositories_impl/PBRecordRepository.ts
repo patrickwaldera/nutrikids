@@ -1,8 +1,10 @@
+import axios from "axios";
+
+import { API_BASE_URL } from "./pocketbase";
+
 import type { Record } from "$lib/core/entities/Record";
 import type { IRecordRepository } from "$lib/core/repositories/RecordRepository";
-import axios from "axios";
-import { API_BASE_URL } from "./pocketbase";
-import { convertDateToDDMMYYYY, convertDateToYYYYMMDD, formatDateToYYYYMMDD } from "$lib/core/utils/Date";
+import { convertDateToDDMMYYYY, convertDateToYYYYMMDD, formatDateToYYYYMMDD } from "$lib/core/utils/dateUtil";
 
 export class PBRecordsRepository implements IRecordRepository {
 	public async getRecordsBySchoolIdAndMonth(token: string, schoolId: string, month: number): Promise<Record[]> {

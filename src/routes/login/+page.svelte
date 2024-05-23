@@ -1,6 +1,7 @@
 <script lang="ts">
-    import { isLoading } from "$lib/stores/LoadingStore";
     import { fade } from "svelte/transition";
+    
+    import { isLoading } from "$lib/stores/LoadingStore";
 
     let username = "";
     let password = "";

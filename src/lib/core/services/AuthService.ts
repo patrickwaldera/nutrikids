@@ -1,6 +1,6 @@
-import { PBAuthRepository } from "$lib/infra/repositories_impl/PBAuthRepository";
 import type { LoginResponse } from "$lib/core/dtos/LoginResponse";
 import type { IAuthRepository } from "$lib/core/repositories/AuthRepository";
+import { PBAuthRepository } from "$lib/infra/repositories_impl/PBAuthRepository";
 
 export class AuthService {
 	private static authRepository: IAuthRepository = new PBAuthRepository();

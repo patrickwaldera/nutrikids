@@ -1,7 +1,9 @@
 import axios from "axios";
+
 import { API_BASE_URL } from "./pocketbase";
-import type { IAuthRepository } from "$lib/core/repositories/AuthRepository";
+
 import type { LoginResponse } from "$lib/core/dtos/LoginResponse";
+import type { IAuthRepository } from "$lib/core/repositories/AuthRepository";
 
 export class PBAuthRepository implements IAuthRepository {
 	public async login(username: string, password: string): Promise<LoginResponse> {

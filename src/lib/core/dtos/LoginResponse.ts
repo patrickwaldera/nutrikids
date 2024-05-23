@@ -1,4 +1,4 @@
-import type { User } from "../entities/User";
+import type { User } from "$lib/core/entities/User";
 
 export type LoginResponse = {
 	user: User;

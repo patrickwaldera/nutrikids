@@ -1,4 +1,4 @@
-import type { Student } from "../entities/Student";
+import type { Student } from "$lib/core/entities/Student";
 
 export interface IStudentRepository {
 	getManyBySchoolId(token: string, schoolId: string): Promise<Student[]>;

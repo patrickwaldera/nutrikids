@@ -1,5 +1,6 @@
 <script lang="ts">
 	import logo from '$lib/images/nutrikids.png';
+    
     const year = new Date().getFullYear();
 </script>
 

@@ -1,14 +1,15 @@
 <script lang="ts">
+    import { fade } from "svelte/transition";
+
+    import type { Record } from "$lib/core/entities/Record";
+    import { isLoading } from "$lib/stores/LoadingStore";
+    import { RecordService } from "$lib/core/services/RecordService";
+    import { startLoading, stopLoading } from "$lib/core/utils/loadingUtil";
     import CreateRecordModal from "$lib/components/CreateRecordModal.svelte";
     import DeleteModal from "$lib/components/DeleteModal.svelte";
     import EditRecordModal from "$lib/components/EditRecordModal.svelte";
     import ErrorComponent from "$lib/components/ErrorComponent.svelte";
     import SkeletonTable from "$lib/components/SkeletonTable.svelte";
-    import type { Record } from "$lib/core/entities/Record";
-    import { RecordService } from "$lib/core/services/RecordService";
-    import { startLoading, stopLoading } from "$lib/core/utils/LoadingUtil";
-    import { isLoading } from "$lib/stores/LoadingStore.js";
-    import { fade } from "svelte/transition";
 
 	export let data;
 	

@@ -1,9 +1,10 @@
 <script lang="ts">
-    import { BmiService } from '$lib/core/services/BmiService';
-    import { validateDateFormat } from '$lib/core/utils/Date';
-    import { clickOutside } from '$lib/core/utils/clickOutside';
     import { createEventDispatcher } from 'svelte';
     import { fade } from 'svelte/transition';
+
+    import { BmiService } from '$lib/core/services/BmiService';
+    import { validateDateFormat } from '$lib/core/utils/dateUtil';
+    import { clickOutside } from '$lib/core/utils/clickOutsideUtil';
 
     export let record;
 

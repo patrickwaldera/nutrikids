@@ -1,6 +1,6 @@
+import type { Student } from "$lib/core/entities/Student";
+import type { IStudentRepository } from "$lib/core/repositories/StudentRepository";
 import { PBStudentRepository } from "$lib/infra/repositories_impl/PBStudentRepository";
-import type { Student } from "../entities/Student";
-import type { IStudentRepository } from "../repositories/StudentRepository";
 
 export class StudentService {
 	private static studentRepository: IStudentRepository = new PBStudentRepository();

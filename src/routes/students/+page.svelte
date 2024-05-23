@@ -1,11 +1,12 @@
 <script lang="ts">
     import { fade } from "svelte/transition";
+
 	import type { Student } from "$lib/core/entities/Student";
+    import { StudentService } from "$lib/core/services/StudentService";
+    import { calculateAge } from "$lib/core/utils/dateUtil";
 	import ErrorComponent from "$lib/components/ErrorComponent.svelte";
     import DeleteModal from "$lib/components/DeleteModal.svelte";
     import EditStudentModal from "$lib/components/EditStudentModal.svelte";
-    import { calculateAge } from "$lib/core/utils/Date";
-    import { StudentService } from "$lib/core/services/StudentService";
     import CreateStudentModal from "$lib/components/CreateStudentModal.svelte";
 
 	export let data;

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import "../app.css"
 
-    import Footer from "$lib/components/Footer.svelte";
     import Header from "$lib/components/Header.svelte";
     import Navbar from "$lib/components/Navbar.svelte";
+    import Footer from "$lib/components/Footer.svelte";
 
 	export let data;
 </script>

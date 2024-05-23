@@ -1,4 +1,4 @@
-import type { LoginResponse } from "../dtos/LoginResponse";
+import type { LoginResponse } from "$lib/core/dtos/LoginResponse";
 
 export interface IAuthRepository {
 	login(username: string, password: string): Promise<LoginResponse>;

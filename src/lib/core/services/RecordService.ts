@@ -1,6 +1,6 @@
+import type { Record } from "$lib/core/entities/Record";
+import type { IRecordRepository } from "$lib/core/repositories/RecordRepository";
 import { PBRecordsRepository } from "$lib/infra/repositories_impl/PBRecordRepository";
-import type { Record } from "../entities/Record";
-import type { IRecordRepository } from "../repositories/RecordRepository";
 
 export class RecordService {
 	private static recordsRepository: IRecordRepository = new PBRecordsRepository();

@@ -1,11 +1,12 @@
 <script lang="ts">
+    import { createEventDispatcher } from 'svelte';
+    import { fade } from 'svelte/transition';
+
     import type { Record } from '$lib/core/entities/Record';
     import type { Student } from '$lib/core/entities/Student';
     import { BmiService } from '$lib/core/services/BmiService';
-    import { calculateAge, convertDateToDDMMYYYY, formatDateInput, validateDateFormat } from '$lib/core/utils/Date';
-    import { clickOutside } from '$lib/core/utils/clickOutside';
-    import { createEventDispatcher } from 'svelte';
-    import { fade } from 'svelte/transition';
+    import { calculateAge, convertDateToDDMMYYYY, formatDateInput, validateDateFormat } from '$lib/core/utils/dateUtil';
+    import { clickOutside } from '$lib/core/utils/clickOutsideUtil';
 
     const dispatch = createEventDispatcher();
 	

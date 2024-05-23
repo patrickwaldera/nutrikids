@@ -1,8 +1,10 @@
 import axios from "axios";
+
 import { API_BASE_URL } from "./pocketbase";
+
 import type { School } from "$lib/core/entities/School";
-import type { ISchoolRepository } from "$lib/core/repositories/SchoolRepository";
 import type { Class } from "$lib/core/entities/Class";
+import type { ISchoolRepository } from "$lib/core/repositories/SchoolRepository";
 
 export class PBSchoolRepository implements ISchoolRepository {
 	public async getOneById(token: string, id: string): Promise<School> {

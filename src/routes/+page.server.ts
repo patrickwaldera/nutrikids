@@ -1,8 +1,9 @@
 import { redirect } from "@sveltejs/kit"
 import type { PageServerLoad } from "./$types"
+
 import { SchoolService } from "$lib/core/services/SchoolService";
 import { RecordService } from "$lib/core/services/RecordService";
-import { initializePieChartData } from "$lib/core/utils/ChartJsUtil";
+import { initializePieChartData } from "$lib/core/utils/chartJsUtil";
 
 export const prerender = true;
 
@@ -12,8 +13,10 @@ export const load: PageServerLoad = async (event) => {
 	}
 
 	try {
+
 		const schoolId = event.locals.user?.schoolId;
 		const currentMonth = new Date().getMonth() + 1;
+
 		if (schoolId) {
 			const school = await SchoolService.getOneById(event.locals.token, schoolId);
 			const classes = await SchoolService.getClassesBySchoolId(event.locals.token, schoolId);
@@ -22,6 +25,7 @@ export const load: PageServerLoad = async (event) => {
 
 			return { school, pieChartData };
 		}
+		
 	} catch (error) {
 		return { error: "Ocorreu um erro ao buscar as informações da escola." };
 	}
