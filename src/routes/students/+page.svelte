@@ -6,6 +6,7 @@
     import EditStudentModal from "$lib/components/EditStudentModal.svelte";
     import { calculateAge } from "$lib/core/utils/Date";
     import { StudentService } from "$lib/core/services/StudentService";
+    import CreateStudentModal from "$lib/components/CreateStudentModal.svelte";
 
 	export let data;
 
@@ -15,13 +16,14 @@
 
 	let showEditModal = false;
 	let showDeleteModal = false;
+	let showCreateModal = false;
 	let selectedStudent: Student | null = null;
 
 	function filterByClass() {
 		if (selectedClass === "default") {
 			studentsToShow = students;
 		} else {
-			studentsToShow = data?.students?.filter((student: any) => student.classId === selectedClass);
+			studentsToShow = students?.filter((student: any) => student.classId === selectedClass);
 		}
 	}
 
@@ -37,7 +39,11 @@
 
 	async function handleUpdate(event: any) {
 		const updatedStudent = event.detail;
-		const index = studentsToShow!.findIndex((record) => record.id === updatedStudent.id);
+		let index = students!.findIndex((student) => student.id === updatedStudent.id);
+		if (index !== -1) {
+			students![index] = updatedStudent;
+		}
+		index = studentsToShow!.findIndex((record) => record.id === updatedStudent.id);
 		if (index !== -1) {
 			studentsToShow![index] = updatedStudent;
 		}
@@ -60,15 +66,46 @@
 	}
 
 	async function handleDelete() {
-		const index = studentsToShow!.findIndex((record) => record.id === selectedStudent!.id);
+		const studentId = selectedStudent!.id;
+		let index = students!.findIndex((student) => student.id === studentId);
+		if (index !== -1) {
+			students!.splice(index, 1);
+			students = students;
+		}
+		
+		index = studentsToShow!.findIndex((record) => record.id === studentId);
 		if (index !== -1) {
 			studentsToShow!.splice(index, 1);
 			studentsToShow = studentsToShow;
 		}
 		try {
-			await StudentService.delete(data.token!, selectedStudent!.id);
+			await StudentService.delete(data.token!, studentId);
 		} catch (error) {
 			data.error = "Erro ao deletar o registro.";
+		}
+	}
+
+	function openCreateModal() {
+		showCreateModal = true;
+	}
+
+	function closeCreateModal() {
+		showCreateModal = false;
+	}
+
+	async function handleCreate(event: any) {
+		const newStudent = event.detail;
+		try {
+			const studentId = await StudentService.create(data.token!, newStudent);
+			newStudent.id = studentId;
+			students = [...students!, newStudent];
+			students = students?.sort((a, b) => a.name.localeCompare(b.name));
+			if (selectedClass === "default" || selectedClass === newStudent.classId) {
+				studentsToShow = [...studentsToShow!, newStudent];
+				studentsToShow = studentsToShow?.sort((a, b) => a.name.localeCompare(b.name));
+			}
+		} catch (error) {
+			data.error = "Erro ao criar o registro.";
 		}
 	}
 
@@ -86,9 +123,9 @@
 			<div class="flex flex-wrap gap-6 justify-between items-center">
 				<h1 class="text-3xl font-bold underline">Alunos</h1>
 				
-				<button class="sm:block hidden btn btn-primary" on:click={() => console.log("// TODO add")}>Adicionar registro</button>
+				<button class="sm:block hidden btn btn-primary" on:click={() => openCreateModal()}>Adicionar aluno</button>
 
-				<button class="sm:hidden btn btn-primary btn-circle btn-lg text-3xl flex items-center fixed bottom-10 right-10 shadow-lg shadow-neutral-400" on:click={() => console.log("// TODO add")}><i class='bx bx-plus'></i></button>
+				<button class="sm:hidden btn btn-primary btn-circle btn-lg text-3xl flex items-center fixed bottom-10 right-10 shadow-lg shadow-neutral-400" on:click={() => openCreateModal()}><i class='bx bx-plus'></i></button>
 			</div>
 			<div class="flex flex-wrap gap-2 max-w-full">
 				<select class="select select-bordered select-sm max-w-xs" bind:value={selectedClass} on:change={filterByClass}>
@@ -100,12 +137,12 @@
 			</div>
 		</div>
 		{#if studentsToShow?.length === 0}
-			<div class="mt-6">
+			<div class="mt-6" in:fade={{ duration: 300 }}>
 				<p>Nenhum registro encontrado.</p>
 			</div>
 		{/if}
 		{#if studentsToShow && studentsToShow.length > 0}
-			<div class="overflow-x-auto mt-6">
+			<div class="overflow-x-auto mt-6" in:fade={{ duration: 300 }}>
 				<table class="table table-xs">
 				<thead>
 					<tr>
@@ -117,7 +154,7 @@
 				</thead> 
 					<tbody>
 						{#each studentsToShow ?? [] as student}
-							<tr out:fade={{ duration: 200 }} class="hover cursor-pointer text-nowrap" on:click={() => openEditModal(student)}>
+							<tr transition:fade={{ duration: 300 }} class="hover cursor-pointer text-nowrap" on:click={() => openEditModal(student)}>
 								<td>{student.name}</td>
 								<td>{student.birthDate}</td>
 								<td>{student.birthDate ? calculateAge(student.birthDate) : ""}</td>
@@ -131,6 +168,9 @@
 								</td>
 							</tr>
 						{/each}
+						<tr>
+							<td class="text-left" colspan="4"><b>Total: {studentsToShow.length}</b></td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -138,7 +178,7 @@
 	{/if}
 
 	{#if showEditModal}
-		<EditStudentModal student={selectedStudent} on:close={closeEditModal} on:save={handleUpdate}/>
+		<EditStudentModal student={selectedStudent} classes={data?.classes} on:close={closeEditModal} on:save={handleUpdate}/>
 	{/if}
 
 	{#if showDeleteModal}
@@ -150,5 +190,9 @@
 			on:close={closeDeleteModal}
 			on:delete={handleDelete}
 		/>
+	{/if}
+
+	{#if showCreateModal}
+		<CreateStudentModal classes={data?.classes} on:close={closeCreateModal} on:create={handleCreate}/>
 	{/if}
 </section>
