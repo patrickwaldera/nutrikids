@@ -125,7 +125,7 @@
 				
 				<button class="sm:block hidden btn btn-primary" on:click={() => openCreateModal()}>Adicionar aluno</button>
 
-				<button class="sm:hidden btn btn-primary btn-circle btn-lg text-3xl flex items-center fixed bottom-10 right-10 shadow-lg shadow-neutral-400" on:click={() => openCreateModal()}><i class='bx bx-plus'></i></button>
+				<button class="sm:hidden btn btn-primary btn-circle btn-lg text-3xl flex items-center fixed bottom-10 right-10 shadow-lg shadow-neutral-400 z-20" on:click={() => openCreateModal()}><i class='bx bx-plus'></i></button>
 			</div>
 			<div class="flex flex-wrap gap-2 max-w-full">
 				<select class="select select-bordered select-sm max-w-xs" bind:value={selectedClass} on:change={filterByClass}>

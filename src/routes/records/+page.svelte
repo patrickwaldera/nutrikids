@@ -120,7 +120,7 @@
 
 				<button class="sm:block hidden btn btn-primary" on:click={() => console.log("// TODO add")}>Adicionar registro</button>
 
-				<button class="sm:hidden btn btn-primary btn-circle btn-lg text-3xl flex items-center fixed bottom-10 right-10 shadow-lg shadow-neutral-400" on:click={() => console.log("// TODO add")}><i class='bx bx-plus'></i></button>
+				<button class="sm:hidden btn btn-primary btn-circle btn-lg text-3xl flex items-center fixed bottom-10 right-10 shadow-lg shadow-neutral-400 z-20" on:click={() => console.log("// TODO add")}><i class='bx bx-plus'></i></button>
 
 			</div>
 			<div class="flex flex-wrap gap-2 max-w-full items-center">
