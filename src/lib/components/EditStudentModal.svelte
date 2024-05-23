@@ -14,6 +14,8 @@
 
 	let errorDateMessage = "";
 
+	$: disabled = !updatedStudent.name || !updatedStudent.classId;
+
 	function closeModal() {
         dispatch('close');
     }
@@ -80,7 +82,7 @@
 				</select>
 			</div>
 			<div class="form-control w-full flex flex-col gap-2 mt-6">
-				<button type="submit" class="btn btn-primary w-full">Salvar</button>
+				<button type="submit" class="btn btn-primary w-full" {disabled}>Salvar</button>
 				<button type="button" class="btn btn-neutral-500 w-full" on:click={closeModal}>Cancelar</button>
 			</div>
 		</form>
