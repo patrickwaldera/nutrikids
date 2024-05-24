@@ -25,7 +25,7 @@
 		classId: "",
 		className: "",
 		classAlias: "",
-		date: convertDateToDDMMYYYY(new Date().toISOString().split('T')[0]),
+		date: new Date().toLocaleDateString("pt-BR"),
 		ageAtMeasurement: 0,
 		weight: 0,
 		height: 0,
@@ -122,7 +122,7 @@
 						<ul class="dropdown-content z-10 menu p-2 shadow bg-base-100 rounded-box w-full max-h-80 flex-nowrap overflow-auto">
 							{#each filteredStudents ?? [] as student}
 								<li>
-									<button on:click|preventDefault={() => onStudentClicked(student)}>{student.name}</button>
+									<button on:click|preventDefault|stopPropagation={() => onStudentClicked(student)}>{student.name}</button>
 								</li>
 							{/each}
 						</ul>
