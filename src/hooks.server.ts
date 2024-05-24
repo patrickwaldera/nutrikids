@@ -7,6 +7,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const userCookie = event.cookies.get("user") || null;
 	const user = userCookie ? JSON.parse(userCookie) : null;
 	event.locals.user =  user;
+
+	const response = await resolve(event);
+	response.headers.set('cache-control', 'no-cache')
 	
-	return resolve(event);
+	return response;
 }

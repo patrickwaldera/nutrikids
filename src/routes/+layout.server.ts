@@ -3,6 +3,8 @@ import { AuthService } from "$lib/core/services/AuthService";
 import type { LayoutServerLoad } from "./$types";
 import { ENVIRONMENT } from "$env/static/private";
 
+export const prerender = false;
+
 export const load: LayoutServerLoad = async ({cookies}) => {
 
 	const tokenCookie = cookies.get("token") || null;

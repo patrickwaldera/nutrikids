@@ -5,8 +5,6 @@ import { SchoolService } from "$lib/core/services/SchoolService";
 import { RecordService } from "$lib/core/services/RecordService";
 import { initializePieChartData } from "$lib/core/utils/chartJsUtil";
 
-export const prerender = true;
-
 export const load: PageServerLoad = async (event) => {
 	if(!event.locals.token) {
 	  throw redirect(303, "/login")

@@ -6,8 +6,6 @@ import { RecordService } from "$lib/core/services/RecordService";
 import { SchoolService } from "$lib/core/services/SchoolService";
 import { StudentService } from "$lib/core/services/StudentService";
 
-export const prerender = true;
-
 export const load: PageServerLoad = async (event) => {
 	if(!event.locals.token) {
 	  throw redirect(303, "/login")
