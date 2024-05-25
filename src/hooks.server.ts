@@ -12,7 +12,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	response.headers.set('Access-Control-Allow-Origin', '*')
 	response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 	response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-	response.headers.set('cache-control', 'no-cache')
+	response.headers.set('cache-control', 'no-cache max-age=0, must-revalidate, no-store');
 	
 	return response;
 }
